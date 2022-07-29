@@ -1,6 +1,6 @@
 # GServer
 <div align=center>
-<img src="https://static.gitlib.com/gserver/logo.png" width="100"/>
+<img src="https://static.gitlib.com/gserver/logo.png" alt="gserver"/>
 
 [![Production Ready](https://img.shields.io/badge/production-ready-blue.svg)](https://github.com/Ravior/gserver)
 [![License](https://img.shields.io/github/license/gogf/gf.svg?style=flat)](https://github.com/Ravior/gserver)
