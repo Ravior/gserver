@@ -13,7 +13,8 @@
 ```
 
 [![Production Ready](https://img.shields.io/badge/production-ready-blue.svg)](https://github.com/Ravior/gserver)
-[![License](https://img.shields.io/github/license/gogf/gf.svg?style=flat)](https://github.com/Ravior/gserver)
+[![License](https://img.shields.io/github/license/Ravior/gserver.svg?style=flat)](https://github.com/Ravior/gserver)
+[![GoVersion](https://img.shields.io/github/go-mod/go-version/Ravior/gserver)](https://github.com/Ravior/gserver)
 </div>
 
 `GServer` is a modular, powerful, high-performance and enterprise-class game server framework of Golang.
