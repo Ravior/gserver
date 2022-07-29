@@ -1,6 +1,16 @@
 # GServer
 <div align=center>
-<img src="https://static.gitlib.com/gserver/logo.png" alt="gserver"/>
+
+```golang
+
+   ____  ____                                
+  / ___|/ ___|   ___  _ __ __   __ ___  _ __ 
+ | |  _ \___ \  / _ \| '__|\ \ / // _ \| '__|
+ | |_| | ___) ||  __/| |    \ V /|  __/| |   
+  \____||____/  \___||_|     \_/  \___||_|   
+                                             
+
+```
 
 [![Production Ready](https://img.shields.io/badge/production-ready-blue.svg)](https://github.com/Ravior/gserver)
 [![License](https://img.shields.io/github/license/gogf/gf.svg?style=flat)](https://github.com/Ravior/gserver)
