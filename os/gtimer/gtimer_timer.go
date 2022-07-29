@@ -1,15 +1,15 @@
 package gtimer
 
 import (
-	gtype2 "github.com/Ravior/gserver/util/gcontainer/gtype"
+	"github.com/Ravior/gserver/util/gcontainer/gtype"
 	"time"
 )
 
 func New() *Timer {
 	t := &Timer{
 		queue:  newPriorityQueue(),
-		status: gtype2.NewInt(StatusRunning),
-		ticks:  gtype2.NewInt64(),
+		status: gtype.NewInt(StatusRunning),
+		ticks:  gtype.NewInt64(),
 	}
 	go t.loop()
 	return t
@@ -145,11 +145,11 @@ func (t *Timer) createEntry(interval time.Duration, job JobFunc, singleton bool,
 			job:       job,
 			timer:     t,
 			ticks:     intervalTicksOfJob,
-			times:     gtype2.NewInt(times),
-			status:    gtype2.NewInt(status),
-			singleton: gtype2.NewBool(singleton),
-			nextTicks: gtype2.NewInt64(nextTicks),
-			infinite:  gtype2.NewBool(infinite),
+			times:     gtype.NewInt(times),
+			status:    gtype.NewInt(status),
+			singleton: gtype.NewBool(singleton),
+			nextTicks: gtype.NewInt64(nextTicks),
+			infinite:  gtype.NewBool(infinite),
 		}
 	)
 	t.queue.Push(entry, nextTicks)

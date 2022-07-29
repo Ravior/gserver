@@ -1,7 +1,7 @@
 package gtimer
 
 import (
-	gtype2 "github.com/Ravior/gserver/util/gcontainer/gtype"
+	"github.com/Ravior/gserver/util/gcontainer/gtype"
 	"sync"
 	"time"
 )
@@ -10,8 +10,8 @@ import (
 type Timer struct {
 	mu     sync.RWMutex
 	queue  *priorityQueue // queue is a priority queue based on heap structure.
-	status *gtype2.Int    // status is the current timer status.
-	ticks  *gtype2.Int64  // ticks is the proceeded interval number by the timer.
+	status *gtype.Int     // status is the current timer status.
+	ticks  *gtype.Int64   // ticks is the proceeded interval number by the timer.
 }
 
 const (

@@ -2,19 +2,19 @@ package gtimer
 
 import (
 	"github.com/Ravior/gserver/os/glog"
-	gtype2 "github.com/Ravior/gserver/util/gcontainer/gtype"
+	"github.com/Ravior/gserver/util/gcontainer/gtype"
 )
 
 // Entry is the timing job.
 type Entry struct {
-	job       JobFunc       // The job function.
-	timer     *Timer        // Belonged timer.
-	ticks     int64         // The job runs every tick.
-	times     *gtype2.Int   // Limit running times.
-	status    *gtype2.Int   // Job status.
-	singleton *gtype2.Bool  // Singleton mode.
-	nextTicks *gtype2.Int64 // Next run ticks of the job.
-	infinite  *gtype2.Bool  // No times limit.
+	job       JobFunc      // The job function.
+	timer     *Timer       // Belonged timer.
+	ticks     int64        // The job runs every tick.
+	times     *gtype.Int   // Limit running times.
+	status    *gtype.Int   // Job status.
+	singleton *gtype.Bool  // Singleton mode.
+	nextTicks *gtype.Int64 // Next run ticks of the job.
+	infinite  *gtype.Bool  // No times limit.
 }
 
 // JobFunc is the job function.
