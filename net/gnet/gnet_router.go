@@ -3,11 +3,11 @@ package gnet
 import (
 	"errors"
 	"fmt"
-	"github.com/Ravior/gserver/core/crypto/gcrc32"
+	"github.com/Ravior/gserver/crypto/gcrc32"
+	"github.com/Ravior/gserver/internal/empty"
 	"github.com/Ravior/gserver/os/glog"
 	"github.com/Ravior/gserver/util/gconfig"
 	"github.com/Ravior/gserver/util/gserialize"
-	"github.com/Ravior/gserver/util/gutil"
 	"github.com/golang/protobuf/proto"
 	"reflect"
 	"strings"
@@ -141,7 +141,7 @@ func (m *msgRouteMgr) AddRoute(proto string, route string, msg reflect.Type) {
 		Proto: proto,
 		Route: route,
 	}
-	if !gutil.IsEmpty(proto) {
+	if !empty.IsEmpty(proto) {
 		m.protoMap[proto] = msgId
 		m.msgIdMap[msgId] = msg
 	}
@@ -176,7 +176,7 @@ func (r *Router) Group(prefix string) *Group {
 func (r *Router) Run(req *Request) {
 	msgId := req.GetMessage().GetMsgId()
 	route := RouteItemMgr.GetRoute(msgId)
-	if gutil.IsEmpty(route) {
+	if empty.IsEmpty(route) {
 		return
 	}
 

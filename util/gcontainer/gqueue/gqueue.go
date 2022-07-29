@@ -14,8 +14,8 @@ package gqueue
 //
 
 import (
-	"jzserver/core/util/gcontainer/glist"
-	"jzserver/core/util/gcontainer/gtype"
+	"github.com/Ravior/gserver/util/gcontainer/glist"
+	"github.com/Ravior/gserver/util/gcontainer/gtype"
 	"math"
 )
 

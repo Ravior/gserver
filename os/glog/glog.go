@@ -2,7 +2,7 @@ package glog
 
 import (
 	"github.com/Ravior/gserver/os/glog/internal"
-	gconfig2 "github.com/Ravior/gserver/util/gconfig"
+	"github.com/Ravior/gserver/util/gconfig"
 	"github.com/lestrrat-go/file-rotatelogs"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -22,7 +22,7 @@ var (
 
 type Logger struct {
 	*zap.SugaredLogger
-	*gconfig2.LogConfig
+	*gconfig.LogConfig
 }
 
 func init() {
@@ -31,7 +31,7 @@ func init() {
 
 // Init 日志模块初始化
 func Init(serverId string) {
-	for name, _ := range gconfig2.Global.Log {
+	for name, _ := range gconfig.Global.Log {
 		NewLogger(name, serverId)
 	}
 	if logger, ok := loggers["default"]; ok {
@@ -76,7 +76,7 @@ func NewLogger(name string, serverId string, opts ...zap.Option) *Logger {
 
 }
 
-func NewConfigLogger(config *gconfig2.LogConfig, serverId string, opts ...zap.Option) *Logger {
+func NewConfigLogger(config *gconfig.LogConfig, serverId string, opts ...zap.Option) *Logger {
 	encoderConfig := zapcore.EncoderConfig{
 		TimeKey:        "ts",
 		LevelKey:       "level",

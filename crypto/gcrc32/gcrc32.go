@@ -10,3 +10,7 @@ import (
 func Encrypt(v interface{}) uint32 {
 	return crc32.ChecksumIEEE(gconv.Bytes(v))
 }
+
+func EncryptString(v string) uint32 {
+	return crc32.ChecksumIEEE([]byte(v))
+}

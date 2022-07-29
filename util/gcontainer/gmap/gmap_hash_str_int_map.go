@@ -8,10 +8,10 @@
 package gmap
 
 import (
-	"jzserver/core/internal/empty"
-	"jzserver/core/internal/json"
-	"jzserver/core/internal/rwmutex"
-	"jzserver/core/util/gconv"
+	"github.com/Ravior/gserver/internal/empty"
+	"github.com/Ravior/gserver/internal/json"
+	"github.com/Ravior/gserver/internal/rwmutex"
+	"github.com/Ravior/gserver/util/gconv"
 )
 
 type StrIntMap struct {

@@ -2,9 +2,10 @@ package gset
 
 import (
 	"bytes"
-	"jzserver/core/internal/json"
-	"jzserver/core/internal/rwmutex"
-	"jzserver/core/util/gconv"
+	"github.com/Ravior/gserver/internal/json"
+	"github.com/Ravior/gserver/internal/rwmutex"
+	"github.com/Ravior/gserver/text/gstr"
+	"github.com/Ravior/gserver/util/gconv"
 	"strings"
 )
 

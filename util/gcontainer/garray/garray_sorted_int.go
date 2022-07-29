@@ -9,10 +9,9 @@ package garray
 import (
 	"bytes"
 	"fmt"
-	"jzserver/core/internal/json"
-	"jzserver/core/internal/rwmutex"
-	"jzserver/core/util/gconv"
-	"jzserver/core/util/grand"
+	"github.com/Ravior/gserver/internal/json"
+	"github.com/Ravior/gserver/internal/rwmutex"
+	"github.com/Ravior/gserver/util/gconv"
 	"math"
 	"sort"
 )

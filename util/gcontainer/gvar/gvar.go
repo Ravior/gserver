@@ -1,9 +1,9 @@
 package gvar
 
 import (
-	"jzserver/core/internal/json"
-	"jzserver/core/util/gcontainer/gtype"
-	"jzserver/core/util/gconv"
+	"github.com/Ravior/gserver/internal/json"
+	"github.com/Ravior/gserver/util/gcontainer/gtype"
+	"github.com/Ravior/gserver/util/gconv"
 )
 
 // Var is an universal variable type implementer.

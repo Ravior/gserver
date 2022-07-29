@@ -2,9 +2,9 @@ package gset
 
 import (
 	"bytes"
-	"jzserver/core/internal/json"
-	"jzserver/core/internal/rwmutex"
-	"jzserver/core/util/gconv"
+	"github.com/Ravior/gserver/internal/json"
+	"github.com/Ravior/gserver/internal/rwmutex"
+	"github.com/Ravior/gserver/util/gconv"
 )
 
 type IntSet struct {
@@ -12,7 +12,7 @@ type IntSet struct {
 	data map[int]struct{}
 }
 
-// New create and returns a new set, which contains un-repeated items.
+// NewIntSet New create and returns a new set, which contains un-repeated items.
 // The parameter <safe> is used to specify whether using set in concurrent-safety,
 // which is false in default.
 func NewIntSet(safe ...bool) *IntSet {

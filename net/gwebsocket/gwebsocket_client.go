@@ -2,9 +2,9 @@ package gwebsocket
 
 import (
 	"fmt"
+	"github.com/Ravior/gserver/internal/empty"
 	gnet2 "github.com/Ravior/gserver/net/gnet"
 	"github.com/Ravior/gserver/os/glog"
-	"github.com/Ravior/gserver/util/gutil"
 	"github.com/gorilla/websocket"
 )
 
@@ -63,14 +63,14 @@ func (c *Client) SetRemotePath(path string) {
 }
 
 func (c *Client) GetSchema() string {
-	if gutil.IsEmpty(c.scheme) {
+	if empty.IsEmpty(c.scheme) {
 		c.scheme = "ws"
 	}
 	return c.scheme
 }
 
 func (c *Client) GetRemotePath() string {
-	if gutil.IsEmpty(c.remotePath) {
+	if empty.IsEmpty(c.remotePath) {
 		c.remotePath = "/"
 	}
 	return c.remotePath

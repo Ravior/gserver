@@ -1,7 +1,7 @@
 package gtype
 
 import (
-	"jzserver/core/util/gconv"
+	"github.com/Ravior/gserver/util/gconv"
 	"strconv"
 	"sync/atomic"
 )

@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	SevenDaysSeconds int64 = 7 * 86400
+	SevenDaysSeconds int64 = 604800
 	OneDaySeconds    int64 = 86400
 )
 

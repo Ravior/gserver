@@ -1,8 +1,8 @@
 package gtype
 
 import (
-	"jzserver/core/internal/json"
-	"jzserver/core/util/gconv"
+	"github.com/Ravior/gserver/internal/json"
+	"github.com/Ravior/gserver/util/gconv"
 	"sync/atomic"
 )
 

@@ -2,7 +2,7 @@ package gtype
 
 import (
 	"bytes"
-	"jzserver/core/util/gconv"
+	"github.com/Ravior/gserver/util/gconv"
 	"sync/atomic"
 )
 

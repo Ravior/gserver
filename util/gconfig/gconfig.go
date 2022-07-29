@@ -1,5 +1,11 @@
 package gconfig
 
+type addr struct {
+	IP   string
+	Port int32
+}
+
+// LogConfig 日志配置
 type LogConfig struct {
 	Level           string // 输出日志等级
 	StackLevel      string // 堆栈输出日志等级
@@ -11,44 +17,6 @@ type LogConfig struct {
 	RotationTime    int    // 日志自动切割时长，单位小时
 	TimeFormat      string // 时间输出格式
 	PrintCaller     bool   // 是否打印调用函数
-}
-
-type addr struct {
-	IP   string
-	Port int32
-}
-
-// TcpServerConfig Tcp服务器配置
-type TcpServerConfig struct {
-	addr
-	MaxConn        int32  // 当前服务器允许的最大链接数
-	WorkerPoolSize uint32 // 业务工作Worker池的数量
-	WorkerTaskLen  uint32 // 业务工作Worker对应负责的任务队列最大任务存储数量
-	MaxMsgChanLen  uint32 // BuffMsg长度
-}
-
-// WsServerConfig Websocket服务器配置
-type WsServerConfig struct {
-	addr
-	MaxConn        int32  // 当前服务器允许的最大链接数
-	WorkerPoolSize uint32 // 业务工作Worker池的数量
-	WorkerTaskLen  uint32 // 业务工作Worker对应负责的任务队列最大任务存储数量
-	MaxMsgChanLen  uint32 // BuffMsg长度
-
-	CertFile string // SSL证书地址
-	KeyFile  string // SSL证书密钥地址
-}
-
-// HttpServerConfig Http服务器配置
-type HttpServerConfig struct {
-	addr
-	CertFile string // SSL证书地址
-	KeyFile  string // SSL证书密钥地址
-}
-
-// RpcServerConfig RPC服务器配置
-type RpcServerConfig struct {
-	addr
 }
 
 // DBConfig 数据库配置
@@ -64,8 +32,58 @@ type DBConfig struct {
 	ShowLog     bool // 是否现实日志
 }
 
+// RedisConfig 数据库配置
+type RedisConfig struct {
+	Host   string
+	Port   int
+	Prefix string
+}
+
+// TcpServerConfig Tcp服务器配置
+type TcpServerConfig struct {
+	addr
+	MaxConn        int32  // 当前服务器允许的最大链接数
+	WorkerPoolSize uint32 // 业务工作Worker池的数量
+	WorkerTaskLen  uint32 // 业务工作Worker对应负责的任务队列最大任务存储数量
+	MaxMsgChanLen  uint32 // MsgBuffChan长度
+}
+
+// WsServerConfig Websocket服务器配置
+type WsServerConfig struct {
+	addr
+	MaxConn        int32  // 当前服务器允许的最大链接数
+	WorkerPoolSize uint32 // 业务工作Worker池的数量
+	WorkerTaskLen  uint32 // 业务工作Worker对应负责的任务队列最大任务存储数量
+	MaxMsgChanLen  uint32 // MsgBuffChan长度
+	CertFile       string // SSL证书地址
+	KeyFile        string // SSL证书密钥地址
+}
+
+// HttpServerConfig Http服务器配置
+type HttpServerConfig struct {
+	addr
+	CertFile string // SSL证书地址
+	KeyFile  string // SSL证书密钥地址
+}
+
+// RpcServerConfig RPC服务器配置
+type RpcServerConfig struct {
+	addr
+}
+
+// PprofConfig Pprof服务器配置
 type PprofConfig struct {
 	addr
+}
+
+// NsqConfig Nsq配置
+type NsqConfig struct {
+	addr
+}
+
+type ConsoleConfig struct {
+	addr
+	ConsolePrompt string // 控制台进入提示
 }
 
 // ClientConfig 客户端配置
@@ -84,15 +102,19 @@ type Config struct {
 	ServerId   string // 服务器id
 	Version    string // 服务器版本
 
-	Master   ClientConfig          // 中心服务器链接地址配置
-	DataBase map[string]*DBConfig  // 数据库配置
-	Log      map[string]*LogConfig // 日志配置
+	Master     ClientConfig            // 中心服务器链接地址配置
+	DataBase   map[string]*DBConfig    // 数据库配置
+	CHDataBase map[string]*DBConfig    // ClickHouse数据库配置
+	Redis      map[string]*RedisConfig // Redis配置
+	Log        map[string]*LogConfig   // 日志配置
 
 	TcpServer  TcpServerConfig  // TCP服务器配置
 	WsServer   WsServerConfig   // WebSocket服务器配置
 	HttpServer HttpServerConfig // HTTP服务器配置
 	RpcServer  RpcServerConfig  // RPC服务器配置
+	Console    ConsoleConfig    // 控制台配置
 	Pprof      PprofConfig      // Pprof控制
+	Nsq        NsqConfig        // NSQ配置
 }
 
 func NewConfig() Config {
