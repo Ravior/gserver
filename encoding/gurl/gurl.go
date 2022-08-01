@@ -2,7 +2,7 @@ package gurl
 
 import (
 	"github.com/Ravior/gserver/text/gstr"
-	gconv2 "github.com/Ravior/gserver/util/gconv"
+	"github.com/Ravior/gserver/util/gconv"
 	"net/url"
 	"strings"
 )
@@ -26,25 +26,25 @@ func Decode(str string) (string, error) {
 	return url.QueryUnescape(str)
 }
 
-// URL-encode according to RFC 3986.
+// RawEncode URL-encode according to RFC 3986.
 // See http://php.net/manual/en/function.rawurlencode.php.
 func RawEncode(str string) string {
 	return strings.Replace(url.QueryEscape(str), "+", "%20", -1)
 }
 
-// DecodeUint32 URL-encoded strings.
+// RawDecode URL-encoded strings.
 // See http://php.net/manual/en/function.rawurldecode.php.
 func RawDecode(str string) (string, error) {
 	return url.QueryUnescape(strings.Replace(str, "%20", "+", -1))
 }
 
-// Generate URL-encoded query string.
+// BuildQuery Generate URL-encoded query string.
 // See http://php.net/manual/en/function.http-build-query.php.
 func BuildQuery(queryData url.Values) string {
 	return queryData.Encode()
 }
 
-// Parse a URL and return its components.
+// ParseURL Parse a URL and return its components.
 // -1: all; 1: scheme; 2: host; 4: port; 8: user; 16: pass; 32: path; 64: query; 128: fragment.
 // See http://php.net/manual/en/function.parse-url.php.
 func ParseURL(str string, component int) (map[string]string, error) {
@@ -91,7 +91,7 @@ func BuildParams(params interface{}, noUrlEncode ...bool) (encodedParamStr strin
 	// If given string/[]byte, converts and returns it directly as string.
 	switch v := params.(type) {
 	case string, []byte:
-		return gconv2.String(params)
+		return gconv.String(params)
 	case []interface{}:
 		if len(v) > 0 {
 			params = v[0]
@@ -100,9 +100,9 @@ func BuildParams(params interface{}, noUrlEncode ...bool) (encodedParamStr strin
 		}
 	}
 	// Else converts it to map and does the url encoding.
-	m, urlEncode := gconv2.Map(params), true
+	m, urlEncode := gconv.Map(params), true
 	if len(m) == 0 {
-		return gconv2.String(params)
+		return gconv.String(params)
 	}
 	if len(noUrlEncode) == 1 {
 		urlEncode = !noUrlEncode[0]
@@ -110,7 +110,7 @@ func BuildParams(params interface{}, noUrlEncode ...bool) (encodedParamStr strin
 	// If there's file uploading, it ignores the url encoding.
 	if urlEncode {
 		for k, v := range m {
-			if gstr.Contains(k, fileUploadingKey) || gstr.Contains(gconv2.String(v), fileUploadingKey) {
+			if gstr.Contains(k, fileUploadingKey) || gstr.Contains(gconv.String(v), fileUploadingKey) {
 				urlEncode = false
 				break
 			}
@@ -121,7 +121,7 @@ func BuildParams(params interface{}, noUrlEncode ...bool) (encodedParamStr strin
 		if len(encodedParamStr) > 0 {
 			encodedParamStr += "&"
 		}
-		s = gconv2.String(v)
+		s = gconv.String(v)
 		if urlEncode && len(s) > 6 && strings.Compare(s[0:6], fileUploadingKey) != 0 {
 			s = Encode(s)
 		}

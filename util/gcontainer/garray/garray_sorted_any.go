@@ -14,7 +14,6 @@ import (
 	"github.com/Ravior/gserver/internal/rwmutex"
 	"github.com/Ravior/gserver/text/gstr"
 	"github.com/Ravior/gserver/util/gconv"
-	"github.com/Ravior/gserver/util/grand"
 	"github.com/Ravior/gserver/util/gutil"
 	"math"
 	"sort"
@@ -244,7 +243,7 @@ func (a *SortedArray) PopRight() (value interface{}, found bool) {
 func (a *SortedArray) PopRand() (value interface{}, found bool) {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	return a.doRemoveWithoutLock(grand.Intn(len(a.array)))
+	return a.doRemoveWithoutLock(gutil.RandIntMax(len(a.array)))
 }
 
 // PopRands randomly pops and returns `size` items out of array.
@@ -259,7 +258,7 @@ func (a *SortedArray) PopRands(size int) []interface{} {
 	}
 	array := make([]interface{}, size)
 	for i := 0; i < size; i++ {
-		array[i], _ = a.doRemoveWithoutLock(grand.Intn(len(a.array)))
+		array[i], _ = a.doRemoveWithoutLock(gutil.RandIntMax(len(a.array)))
 	}
 	return array
 }
@@ -576,7 +575,7 @@ func (a *SortedArray) Rand() (value interface{}, found bool) {
 	if len(a.array) == 0 {
 		return nil, false
 	}
-	return a.array[grand.Intn(len(a.array))], true
+	return a.array[gutil.RandIntMax(len(a.array))], true
 }
 
 // Rands randomly returns `size` items from array(no deleting).
@@ -588,7 +587,7 @@ func (a *SortedArray) Rands(size int) []interface{} {
 	}
 	array := make([]interface{}, size)
 	for i := 0; i < size; i++ {
-		array[i] = a.array[grand.Intn(len(a.array))]
+		array[i] = a.array[gutil.RandIntMax(len(a.array))]
 	}
 	return array
 }

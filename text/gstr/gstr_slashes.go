@@ -2,7 +2,6 @@ package gstr
 
 import (
 	"bytes"
-	"github.com/Ravior/gserver/core/util/gutil"
 )
 
 // AddSlashes quotes chars('"\) with slashes.
@@ -16,11 +15,6 @@ func AddSlashes(str string) string {
 		buf.WriteRune(char)
 	}
 	return buf.String()
-}
-
-// StripSlashes un-quotes a quoted string by AddSlashes.
-func StripSlashes(str string) string {
-	return gutil.StripSlashes(str)
 }
 
 // QuoteMeta returns a version of str with a backslash character (\)

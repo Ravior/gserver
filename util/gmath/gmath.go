@@ -7,7 +7,23 @@ func MinInt(x, y int) int {
 	return x
 }
 
+// MinInt32 最大值
+func MinInt32(x, y int32) int32 {
+	if x > y {
+		return y
+	}
+	return x
+}
+
 func MaxInt(x, y int) int {
+	if x < y {
+		return y
+	}
+	return x
+}
+
+// MaxInt32 最大值
+func MaxInt32(x, y int32) int32 {
 	if x < y {
 		return y
 	}
@@ -30,20 +46,20 @@ func AbsInt32(x int32) int32 {
 	}
 }
 
-// SubAbsInt32 相减-取绝对值
-func SubAbsInt32(a int32, b int32) int32 {
-	abs := a - b
+// SubAbsInt 相减-取绝对值
+func SubAbsInt(x, y int) int {
+	abs := x - y
 	if abs < 0 {
 		return -abs
 	}
 	return abs
 }
 
-// MaxInt32 最大值
-func MaxInt32(a int32, b int32) int32 {
-	if a >= b {
-		return a
-	} else {
-		return b
+// SubAbsInt32 相减-取绝对值
+func SubAbsInt32(x, y int32) int32 {
+	abs := x - y
+	if abs < 0 {
+		return -abs
 	}
+	return abs
 }

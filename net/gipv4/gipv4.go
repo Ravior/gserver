@@ -2,7 +2,6 @@ package gipv4
 
 import (
 	"encoding/binary"
-	"fmt"
 	"github.com/Ravior/gserver/text/gregex"
 	"net"
 	"strconv"
@@ -38,14 +37,4 @@ func ParseAddress(address string) (string, int) {
 		return match[1], i
 	}
 	return "", 0
-}
-
-// GetSegment returns the segment of given ip address.
-// Eg: 192.168.2.102 -> 192.168.2
-func GetSegment(ip string) string {
-	match, err := gregex.MatchString(`^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$`, ip)
-	if err != nil || len(match) < 4 {
-		return ""
-	}
-	return fmt.Sprintf("%s.%s.%s", match[1], match[2], match[3])
 }
