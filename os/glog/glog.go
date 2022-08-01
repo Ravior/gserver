@@ -1,4 +1,4 @@
-package glog
+package glog_test
 
 import (
 	"github.com/Ravior/gserver/os/glog/internal"

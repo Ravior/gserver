@@ -36,14 +36,14 @@ func NowDate() int32 {
 	return gconv.Int32(time.Now().Format("20060102"))
 }
 
-// NowTimeStr 当前日期 格式 Y-m-d H:i:s
-func NowTimeStr() string {
-	return time.Now().Format("2006-01-02 15:04:05")
-}
-
 // NowDateStr 当前日期 格式 Ymd
 func NowDateStr() string {
 	return time.Now().Format("20060102")
+}
+
+// NowTimeStr 当前日期 格式 Y-m-d H:i:s
+func NowTimeStr() string {
+	return time.Now().Format("2006-01-02 15:04:05")
 }
 
 // YesterdayDateStr 昨天日期 格式 Ymd

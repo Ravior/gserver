@@ -7,11 +7,6 @@ import (
 	"reflect"
 )
 
-// Throw throws out an exception, which can be caught be TryCatch or recover.
-func Throw(exception interface{}) {
-	panic(exception)
-}
-
 // Try implements try... logistics using internal panic...recover.
 // It returns error if any exception occurs, or else it returns nil.
 func Try(try func()) (err error) {
