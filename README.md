@@ -21,6 +21,7 @@
 
 # Features
 - Support Non-blocking TCP/UDP/Websocket/Http Network Protocol
+- Simple And Easy Msg Route
 - Support Nsq/Kafka/RabbitMq MQ Protocol
 - Include A* Find Way Algorithm
 - Include High Performance Timer
