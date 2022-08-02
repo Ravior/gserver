@@ -20,12 +20,13 @@
 `GServer` is a modular, powerful, high-performance and enterprise-class game server framework of Golang.
 
 # Features
-- Support TCP/UDP/Websocket/Http Network Protocol
+- Support Non-blocking TCP/UDP/Websocket/Http Network Protocol
 - Support Nsq/Kafka/RabbitMq MQ Protocol
 - Include A* Find Way Algorithm
 - Include High Performance Timer
 - Include EventBus 
-- Include Rich Tool Packages
+- Include Richful Tool Packages
+- Others, More And More...Enjoy Yourself!
 
 
 # Installation
