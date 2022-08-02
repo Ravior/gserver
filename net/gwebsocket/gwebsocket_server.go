@@ -2,7 +2,7 @@ package gwebsocket
 
 import (
 	"fmt"
-	gnet2 "github.com/Ravior/gserver/net/gnet"
+	"github.com/Ravior/gserver/net/gnet"
 	"github.com/Ravior/gserver/os/glog"
 	"github.com/Ravior/gserver/os/gtimer"
 	"github.com/Ravior/gserver/util/gconfig"
@@ -29,13 +29,13 @@ type Server struct {
 	connID        uint32                                                 // 链接ID
 	exit          chan bool                                              // 退出通道
 	listener      *net.TCPListener                                       // 服务器TCP监听器
-	connMgr       *gnet2.ConnManager                                     // 链接管理器
-	router        *gnet2.Router                                          // 消息路由器
-	msgHandler    *gnet2.MsgHandler                                      // 当前Server的消息管理模块，用来绑定消息ID和对应的处理方法
+	connMgr       *gnet.ConnManager                                      // 链接管理器
+	router        *gnet.Router                                           // 消息路由器
+	msgHandler    *gnet.MsgHandler                                       // 当前Server的消息管理模块，用来绑定消息ID和对应的处理方法
 	onConnCheck   func(resp http.ResponseWriter, req *http.Request) bool // WebSocket链接校验判断
 	onConnUpgrade func(conn *Connection, req *http.Request)              // Http协议升级为WebSocket协议触发的Hook函数
-	onConnStart   gnet2.ConnCallback                                     // 有新的客户端链接时触发的Hook函数
-	onConnStop    gnet2.ConnCallback                                     // 当客户端链接断开时触发的Hook函数
+	onConnStart   gnet.ConnCallback                                      // 有新的客户端链接时触发的Hook函数
+	onConnStop    gnet.ConnCallback                                      // 当客户端链接断开时触发的Hook函数
 }
 
 func NewServer() *Server {
@@ -47,10 +47,10 @@ func NewServer() *Server {
 		port:       gconfig.Global.WsServer.Port,
 		certFile:   gconfig.Global.WsServer.CertFile,
 		keyFile:    gconfig.Global.WsServer.KeyFile,
-		connMgr:    gnet2.NewConnManager(),
+		connMgr:    gnet.NewConnManager(),
 		exit:       make(chan bool, 1),
-		router:     &gnet2.Router{},
-		msgHandler: gnet2.NewMsgHandler(gconfig.Global.WsServer.WorkerPoolSize, gconfig.Global.WsServer.WorkerTaskLen),
+		router:     &gnet.Router{},
+		msgHandler: gnet.NewMsgHandler(gconfig.Global.WsServer.WorkerPoolSize, gconfig.Global.WsServer.WorkerTaskLen),
 	}
 	server.msgHandler.SetRouter(server.router)
 
@@ -199,34 +199,34 @@ func (s *Server) Stop() {
 	s.exit <- true
 }
 
-func (s *Server) GetRouter() *gnet2.Router {
+func (s *Server) GetRouter() *gnet.Router {
 	return s.router
 }
 
 // GetConnMgr 获取链接管理器
-func (s *Server) GetConnMgr() *gnet2.ConnManager {
+func (s *Server) GetConnMgr() *gnet.ConnManager {
 	return s.connMgr
 }
 
 // SetOnConnStart 设置服务器有新的链接Hook函数
-func (s *Server) SetOnConnStart(connCallback gnet2.ConnCallback) {
+func (s *Server) SetOnConnStart(connCallback gnet.ConnCallback) {
 	s.onConnStart = connCallback
 }
 
 // SetOnConnStop 设置服务器有链接断开Hook函数
-func (s *Server) SetOnConnStop(connCallback gnet2.ConnCallback) {
+func (s *Server) SetOnConnStop(connCallback gnet.ConnCallback) {
 	s.onConnStop = connCallback
 }
 
 // CallOnConnStart 调用连接OnConnStart Hook函数
-func (s *Server) CallOnConnStart(conn gnet2.IConnection) {
+func (s *Server) CallOnConnStart(conn gnet.IConnection) {
 	if s.onConnStart != nil {
 		s.onConnStart(conn)
 	}
 }
 
 // CallOnConnStop 调用连接OnConnStop Hook函数
-func (s *Server) CallOnConnStop(conn gnet2.IConnection) {
+func (s *Server) CallOnConnStop(conn gnet.IConnection) {
 	if s.onConnStop != nil {
 		s.onConnStop(conn)
 	}

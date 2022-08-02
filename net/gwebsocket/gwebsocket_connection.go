@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	gnet2 "github.com/Ravior/gserver/net/gnet"
+	"github.com/Ravior/gserver/net/gnet"
 	"github.com/Ravior/gserver/os/glog"
 	"github.com/gorilla/websocket"
 	"io"
@@ -17,9 +17,9 @@ type Connection struct {
 	connID            uint32             // 当前链接的ID, 也可以称作为SessionID，ID全局唯一
 	isClosed          int32              // 当前链接的关闭状态(采用原子操作处理)
 	msgChan           chan []byte        // 缓冲管道，用于读、写两个goroutine之间的消息通信
-	socket            gnet2.ISocket      // 当前链接关联的Socket
+	socket            gnet.ISocket       // 当前链接关联的Socket
 	conn              *websocket.Conn    // 当前链接的TCP套接字
-	msgHandler        *gnet2.MsgHandler  // 消息处理模块
+	msgHandler        *gnet.MsgHandler   // 消息处理模块
 	ctx               context.Context    // 告知该链接已经退出/停止的channel
 	cancel            context.CancelFunc // cancelFunc
 	lastHeartBeatTime time.Time          // 最后一次心跳时间
@@ -27,7 +27,7 @@ type Connection struct {
 }
 
 // NewConnection 创建新的链接对象
-func NewConnection(socket gnet2.ISocket, conn *websocket.Conn, connID uint32, msgHandler *gnet2.MsgHandler, maxMsgChanLen uint32) *Connection {
+func NewConnection(socket gnet.ISocket, conn *websocket.Conn, connID uint32, msgHandler *gnet.MsgHandler, maxMsgChanLen uint32) *Connection {
 	c := &Connection{
 		socket:     socket,
 		conn:       conn,
@@ -139,7 +139,7 @@ func (c *Connection) StartReader() {
 			c.KeepAlive()
 
 			// 得到当前客户端请求的Request数据
-			req := gnet2.NewRequest(c, msg)
+			req := gnet.NewRequest(c, msg)
 			// 已经启动工作池机制，将收到消息交给Worker处理
 			c.msgHandler.SendMsgToTaskQueue(req)
 		}
@@ -148,8 +148,8 @@ func (c *Connection) StartReader() {
 
 //============== 实现 interfaces.IConnection 里的全部接口方法 ========
 
-func (c *Connection) GetProtocolType() gnet2.ProtocolType {
-	return gnet2.WebSocket
+func (c *Connection) GetProtocolType() gnet.ProtocolType {
+	return gnet.WebSocket
 }
 
 func (c *Connection) Start() {
@@ -217,7 +217,7 @@ func (c *Connection) GetWsConnection() *websocket.Conn {
 	return c.conn
 }
 
-func (c *Connection) GetSocket() gnet2.ISocket {
+func (c *Connection) GetSocket() gnet.ISocket {
 	return c.socket
 }
 
@@ -252,7 +252,7 @@ func (c *Connection) SendMsg(msgId uint32, data []byte) error {
 	}()
 
 	// 将data封包，并且发送
-	p := gnet2.NewMsg(msgId, data)
+	p := gnet.NewMsg(msgId, data)
 	msg, err := MsgPack.Pack(p)
 	if err != nil {
 		glog.Errorf("Connection pack message fail，msgId:%d, msgData:%v, err:%s, ConnId:%d, Addr:%s", msgId, data, err.Error(), c.connID, c.RemoteAddr())
@@ -281,7 +281,7 @@ func (c *Connection) SendMsg(msgId uint32, data []byte) error {
 
 // StartHeartBeatCheck 定时检测心跳包
 func (c *Connection) StartHeartBeatCheck() {
-	c.heartBeatTimer = time.NewTimer(gnet2.HeartBeatTime * time.Second)
+	c.heartBeatTimer = time.NewTimer(gnet.HeartBeatTime * time.Second)
 	for {
 		select {
 		case <-c.heartBeatTimer.C:
@@ -291,7 +291,7 @@ func (c *Connection) StartHeartBeatCheck() {
 				c.Stop()
 				return
 			}
-			c.heartBeatTimer.Reset(gnet2.HeartBeatTime * time.Second)
+			c.heartBeatTimer.Reset(gnet.HeartBeatTime * time.Second)
 		case <-c.ctx.Done():
 			glog.Infof("Connection Context Done, StopHeartBeatCheck, ConnId:%d, Addr:%s", c.connID, c.RemoteAddr())
 			if c.heartBeatTimer != nil {
@@ -307,7 +307,7 @@ func (c *Connection) StartHeartBeatCheck() {
 // IsAlive 判断是否活跃链接
 func (c *Connection) IsAlive() bool {
 	now := time.Now()
-	if now.Sub(c.lastHeartBeatTime) > gnet2.HeartBeatTime*time.Second {
+	if now.Sub(c.lastHeartBeatTime) > gnet.HeartBeatTime*time.Second {
 		return false
 	}
 	return true

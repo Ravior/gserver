@@ -2,7 +2,7 @@ package gtcp
 
 import (
 	"fmt"
-	gnet2 "github.com/Ravior/gserver/net/gnet"
+	"github.com/Ravior/gserver/net/gnet"
 	"github.com/Ravior/gserver/os/glog"
 	"net"
 )
@@ -20,12 +20,12 @@ type Client struct {
 	ipVersion  string
 	remoteIP   string
 	remotePort int32
-	msgHandler *gnet2.MsgHandler
-	router     *gnet2.Router // 消息路由器
+	msgHandler *gnet.MsgHandler
+	router     *gnet.Router // 消息路由器
 
-	connMgr     *gnet2.ConnManager
-	onConnStart gnet2.ConnCallback
-	onConnStop  gnet2.ConnCallback
+	connMgr     *gnet.ConnManager
+	onConnStart gnet.ConnCallback
+	onConnStop  gnet.ConnCallback
 }
 
 func NewClient(clientId string, clientName string, remoteIP string, remotePort int32) *Client {
@@ -35,9 +35,9 @@ func NewClient(clientId string, clientName string, remoteIP string, remotePort i
 		ipVersion:  "tcp4",
 		remoteIP:   remoteIP,
 		remotePort: remotePort,
-		router:     &gnet2.Router{},
-		msgHandler: gnet2.NewMsgHandler(defaultWorkerPoolSize, defaultWorkerTaskSize),
-		connMgr:    gnet2.NewConnManager(),
+		router:     &gnet.Router{},
+		msgHandler: gnet.NewMsgHandler(defaultWorkerPoolSize, defaultWorkerTaskSize),
+		connMgr:    gnet.NewConnManager(),
 	}
 	client.msgHandler.SetRouter(client.router)
 	return client
@@ -97,11 +97,11 @@ func (c *Client) Run() {
 	conn.Start()
 }
 
-func (c *Client) GetRouter() *gnet2.Router {
+func (c *Client) GetRouter() *gnet.Router {
 	return c.router
 }
 
-func (c *Client) GetConn() gnet2.IConnection {
+func (c *Client) GetConn() gnet.IConnection {
 	conn, err := c.connMgr.Get(0)
 	if err == nil {
 		return conn
@@ -110,25 +110,25 @@ func (c *Client) GetConn() gnet2.IConnection {
 	}
 }
 
-func (c *Client) GetConnMgr() *gnet2.ConnManager {
+func (c *Client) GetConnMgr() *gnet.ConnManager {
 	return c.connMgr
 }
 
-func (c *Client) SetOnConnStart(connCallback gnet2.ConnCallback) {
+func (c *Client) SetOnConnStart(connCallback gnet.ConnCallback) {
 	c.onConnStart = connCallback
 }
 
-func (c *Client) SetOnConnStop(connCallback gnet2.ConnCallback) {
+func (c *Client) SetOnConnStop(connCallback gnet.ConnCallback) {
 	c.onConnStop = connCallback
 }
 
-func (c *Client) CallOnConnStart(conn gnet2.IConnection) {
+func (c *Client) CallOnConnStart(conn gnet.IConnection) {
 	if c.onConnStart != nil {
 		c.onConnStart(conn)
 	}
 }
 
-func (c *Client) CallOnConnStop(conn gnet2.IConnection) {
+func (c *Client) CallOnConnStop(conn gnet.IConnection) {
 	if c.onConnStop != nil {
 		c.onConnStop(conn)
 	}
