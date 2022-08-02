@@ -5,7 +5,7 @@ import (
 	"github.com/Ravior/gserver/crypto/gcrc32"
 	"github.com/Ravior/gserver/os/glog"
 	"github.com/Ravior/gserver/util/gserialize"
-	"github.com/gogo/protobuf/proto"
+	"github.com/golang/protobuf/proto"
 )
 
 // ProtoMarshal 获取MsgId/MsgData
