@@ -42,3 +42,12 @@ func Test_RandomInt(t *testing.T) {
 		fmt.Println(k, v)
 	}
 }
+
+func Test_RandPerm(t *testing.T) {
+	num := 5
+	r := RandPerm(num)
+	fmt.Println(r)
+	if len(r) != num {
+		t.Fail()
+	}
+}

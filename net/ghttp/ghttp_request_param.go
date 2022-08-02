@@ -2,13 +2,13 @@ package ghttp
 
 import (
 	"bytes"
-	"github.com/Ravior/gserver/core/internal/utils"
 	"github.com/Ravior/gserver/encoding/gurl"
 	"github.com/Ravior/gserver/errors/gcode"
 	"github.com/Ravior/gserver/errors/gerror"
 	"github.com/Ravior/gserver/internal/json"
+	"github.com/Ravior/gserver/internal/utils"
 	"github.com/Ravior/gserver/text/gregex"
-	gstr2 "github.com/Ravior/gserver/text/gstr"
+	"github.com/Ravior/gserver/text/gstr"
 	"github.com/Ravior/gserver/util/gconv"
 	"io/ioutil"
 	"strings"
@@ -22,7 +22,7 @@ func (r *Request) parseQuery() {
 	r.parsedQuery = true
 	if r.URL.RawQuery != "" {
 		var err error
-		r.queryMap, err = gstr2.Parse(r.URL.RawQuery)
+		r.queryMap, err = gstr.Parse(r.URL.RawQuery)
 		if err != nil {
 			panic(gerror.WrapCode(gcode.CodeInvalidParameter, err, ""))
 		}
@@ -49,7 +49,7 @@ func (r *Request) parseBody() {
 		}
 		// Default parameters decoding.
 		if r.bodyMap == nil {
-			r.bodyMap, _ = gstr2.Parse(r.GetBodyString())
+			r.bodyMap, _ = gstr.Parse(r.GetBodyString())
 		}
 	}
 }
@@ -69,12 +69,12 @@ func (r *Request) parseForm() {
 	}
 	if contentType := r.Header.Get("Content-Type"); contentType != "" {
 		var err error
-		if gstr2.Contains(contentType, "multipart/") {
+		if gstr.Contains(contentType, "multipart/") {
 			// multipart/form-data, multipart/mixed
 			if err = r.ParseMultipartForm(1024 * 1024); err != nil {
 				panic(gerror.WrapCode(gcode.CodeInvalidRequest, err, ""))
 			}
-		} else if gstr2.Contains(contentType, "form") {
+		} else if gstr.Contains(contentType, "form") {
 			// application/x-www-form-urlencoded
 			if err = r.Request.ParseForm(); err != nil {
 				panic(gerror.WrapCode(gcode.CodeInvalidRequest, err, ""))
@@ -88,7 +88,7 @@ func (r *Request) parseForm() {
 				// Only allow chars of: '\w', '[', ']', '-'.
 				if !gregex.IsMatchString(`^[\w\-\[\]]+$`, name) && len(r.PostForm) == 1 {
 					// It might be JSON/XML content.
-					if s := gstr2.Trim(name + strings.Join(values, " ")); len(s) > 0 {
+					if s := gstr.Trim(name + strings.Join(values, " ")); len(s) > 0 {
 						if s[0] == '{' && s[len(s)-1] == '}' || s[0] == '<' && s[len(s)-1] == '>' {
 							r.bodyContent = gconv.UnsafeStrToBytes(s)
 							params = ""
@@ -119,7 +119,7 @@ func (r *Request) parseForm() {
 				}
 			}
 			if params != "" {
-				if r.formMap, err = gstr2.Parse(params); err != nil {
+				if r.formMap, err = gstr.Parse(params); err != nil {
 					panic(gerror.WrapCode(gcode.CodeInvalidParameter, err, ""))
 				}
 			}

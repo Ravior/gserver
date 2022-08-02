@@ -79,3 +79,14 @@ func RandFloat64Max(max float64) float64 {
 	}
 	return RandFloat64(0, max)
 }
+
+// RandPerm returns, as a slice of n int numbers, a pseudo-random permutation of the integers [0,n).
+func RandPerm(n int) []int {
+	m := make([]int, n)
+	for i := 0; i < n; i++ {
+		j := RandIntMax(i + 1)
+		m[i] = m[j]
+		m[j] = i
+	}
+	return m
+}

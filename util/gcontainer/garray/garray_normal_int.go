@@ -14,7 +14,7 @@ import (
 	"github.com/Ravior/gserver/internal/json"
 	"github.com/Ravior/gserver/internal/rwmutex"
 	"github.com/Ravior/gserver/util/gconv"
-	"github.com/Ravior/gserver/util/grand"
+	"github.com/Ravior/gserver/util/gutil"
 	"math"
 	"sort"
 )
@@ -283,7 +283,7 @@ func (a *IntArray) PopRight() (value int, found bool) {
 func (a *IntArray) PopRand() (value int, found bool) {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	return a.doRemoveWithoutLock(grand.Intn(len(a.array)))
+	return a.doRemoveWithoutLock(gutil.RandIntMax(len(a.array)))
 }
 
 // PopRands randomly pops and returns `size` items out of array.
@@ -300,7 +300,7 @@ func (a *IntArray) PopRands(size int) []int {
 	}
 	array := make([]int, size)
 	for i := 0; i < size; i++ {
-		array[i], _ = a.doRemoveWithoutLock(grand.Intn(len(a.array)))
+		array[i], _ = a.doRemoveWithoutLock(gutil.RandIntMax(len(a.array)))
 	}
 	return array
 }
@@ -634,7 +634,7 @@ func (a *IntArray) Rand() (value int, found bool) {
 	if len(a.array) == 0 {
 		return 0, false
 	}
-	return a.array[grand.Intn(len(a.array))], true
+	return a.array[gutil.RandIntMax(len(a.array))], true
 }
 
 // Rands randomly returns `size` items from array(no deleting).
@@ -646,7 +646,7 @@ func (a *IntArray) Rands(size int) []int {
 	}
 	array := make([]int, size)
 	for i := 0; i < size; i++ {
-		array[i] = a.array[grand.Intn(len(a.array))]
+		array[i] = a.array[gutil.RandIntMax(len(a.array))]
 	}
 	return array
 }
@@ -655,7 +655,7 @@ func (a *IntArray) Rands(size int) []int {
 func (a *IntArray) Shuffle() *IntArray {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	for i, v := range grand.Perm(len(a.array)) {
+	for i, v := range gutil.RandPerm(len(a.array)) {
 		a.array[i], a.array[v] = a.array[v], a.array[i]
 	}
 	return a
