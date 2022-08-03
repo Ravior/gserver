@@ -21,7 +21,7 @@ const IOBufferBytesSize = 4096
 type Server struct {
 	name          string                                                 // 服务器名称
 	id            string                                                 // 服务器ID
-	ipVersion     string                                                 // IP版本，"gtcp"、"tcp4"或"tcp6"
+	ipVersion     string                                                 // IP版本，"tcp"、"tcp4"或"tcp6"
 	ip            string                                                 // Host
 	certFile      string                                                 // SSL证书文件路径
 	keyFile       string                                                 // SSL密钥文件路径

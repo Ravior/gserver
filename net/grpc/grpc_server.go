@@ -13,7 +13,7 @@ type Server struct {
 	name      string           // 服务器名称
 	ip        string           // Host
 	port      int32            // 端口
-	ipVersion string           // IP版本，"gtcp"、"tcp4"或"tcp6"
+	ipVersion string           // IP版本，"tcp"、"tcp4"或"tcp6"
 	listener  *net.TCPListener // 服务器TCP监听器
 	Server    *grpc.Server     // GRPC服务器
 	exit      chan bool        // 退出通道
