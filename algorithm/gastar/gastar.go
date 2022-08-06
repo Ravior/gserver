@@ -112,8 +112,7 @@ func (a *AStar) Find(startNode, endNode *Node) []*Node {
 	a.endNode = endNode
 
 	defer func() {
-		a.openList.Clear()
-		a.closedList.Clear()
+		a.Clear()
 	}()
 
 	a.openList.Add(startNode)
