@@ -59,7 +59,7 @@ This project exists thanks to all the people who contribute. [[Contributors](htt
 
 # Donators
 
-If you love `GServer`, why not [buy developer a cup of coffee](https://gitlib.com)?
+If you love `GServer`, why not [buy developer a cup of coffee](https://gitlib.com/about/)?
 
 # Sponsors
 We appreciate any kind of sponsorship for `GServer` development. If you've got some interesting, please contact WeChat `izhoufei` / Email `zhoufei@mail.gitlib.com`.
