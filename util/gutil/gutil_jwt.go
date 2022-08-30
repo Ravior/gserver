@@ -32,7 +32,7 @@ func (j *Jwt) Decode(auth string) (fieldValue interface{}, err error) {
 	})
 	if err != nil {
 		// 解析失败
-		fmt.Println("JWT DecodeUint32 Error:", err)
+		fmt.Println("JWT Decode Error:", err)
 		return
 	}
 
@@ -46,7 +46,7 @@ func (j *Jwt) DecodeUint(auth string) (fieldValue uint, err error) {
 	})
 	if err != nil {
 		// 解析失败
-		fmt.Println("JWT DecodeUint32 Error:", err)
+		fmt.Println("JWT DecodeUint Error:", err)
 		return
 	}
 
@@ -60,7 +60,7 @@ func (j *Jwt) DecodeUint8(auth string) (fieldValue uint8, err error) {
 	})
 	if err != nil {
 		// 解析失败
-		fmt.Println("JWT DecodeUint32 Error:", err)
+		fmt.Println("JWT DecodeUint8 Error:", err)
 		return
 	}
 
@@ -88,7 +88,7 @@ func (j *Jwt) DecodeUint64(auth string) (fieldValue uint64, err error) {
 	})
 	if err != nil {
 		// 解析失败
-		fmt.Println("JWT DecodeUint32 Error:", err)
+		fmt.Println("JWT DecodeUint64 Error:", err)
 		return
 	}
 
@@ -102,7 +102,7 @@ func (j *Jwt) DecodeInt(auth string) (fieldValue int, err error) {
 	})
 	if err != nil {
 		// 解析失败
-		fmt.Println("JWT DecodeUint32 Error:", err)
+		fmt.Println("JWT DecodeInt Error:", err)
 		return
 	}
 
@@ -116,7 +116,7 @@ func (j *Jwt) DecodeInt8(auth string) (fieldValue int8, err error) {
 	})
 	if err != nil {
 		// 解析失败
-		fmt.Println("JWT DecodeUint32 Error:", err)
+		fmt.Println("JWT DecodeInt8 Error:", err)
 		return
 	}
 
@@ -130,7 +130,7 @@ func (j *Jwt) DecodeInt32(auth string) (fieldValue int32, err error) {
 	})
 	if err != nil {
 		// 解析失败
-		fmt.Println("JWT DecodeUint32 Error:", err)
+		fmt.Println("JWT DecodeInt32 Error:", err)
 		return
 	}
 
@@ -144,7 +144,7 @@ func (j *Jwt) DecodeInt64(auth string) (fieldValue int64, err error) {
 	})
 	if err != nil {
 		// 解析失败
-		fmt.Println("JWT DecodeUint32 Error:", err)
+		fmt.Println("JWT DecodeInt64 Error:", err)
 		return
 	}
 
@@ -158,7 +158,7 @@ func (j *Jwt) DecodeString(auth string) (fieldValue string, err error) {
 	})
 	if err != nil {
 		// 解析失败
-		fmt.Println("JWT DecodeUint32 Error:", err)
+		fmt.Println("JWT DecodeString Error:", err)
 		return
 	}
 

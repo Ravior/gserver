@@ -1,22 +1,33 @@
 package guuid
 
 import (
-	"fmt"
+	"bytes"
 	"github.com/Ravior/gserver/util/gconfig"
-	"github.com/Ravior/gserver/util/gtime"
 	"github.com/Ravior/gserver/util/gutil"
+	"strconv"
 	"sync/atomic"
+	"time"
 )
 
 // 起始UUID
-var startUuid = gtime.Now()
+var startUuid = time.Now().Unix()
+
+// salt
+var salt = gutil.RandSeq(6)
 
 func GetUUID() string {
 	uuid := atomic.AddInt64(&startUuid, 1)
 	if uuid <= 1 {
-		startUuid = gtime.Now()
+		startUuid = time.Now().Unix()
 		uuid = atomic.AddInt64(&startUuid, 1)
 	}
-	salt := gutil.RandSeq(6)
-	return fmt.Sprintf("%s%d%s", gconfig.Global.ServerId, uuid, salt)
+	return buildStr(uuid)
+}
+
+func buildStr(uuid int64) string {
+	var bt bytes.Buffer
+	bt.WriteString(gconfig.Global.ServerId)
+	bt.WriteString(salt)
+	bt.WriteString(strconv.FormatInt(uuid, 10))
+	return bt.String()
 }
