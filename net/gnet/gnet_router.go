@@ -4,30 +4,29 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Ravior/gserver/crypto/gcrc32"
-	"github.com/Ravior/gserver/internal/empty"
 	"github.com/Ravior/gserver/os/glog"
-	"github.com/Ravior/gserver/util/gconfig"
 	"github.com/Ravior/gserver/util/gserialize"
+	"github.com/Ravior/gserver/util/gutil"
 	"github.com/golang/protobuf/proto"
 	"reflect"
 	"strings"
 	"sync"
-	"time"
 )
-
-const MaxResTime = 10 // 最大响应时长,单位ms
 
 type HandlerCallback interface{}
 type HandlerFunc func(request *Request, msg proto.Message)
+type MiddlewareFunc func(HandlerFunc) HandlerFunc
 
-// Group 路由组
+// 路由组
 type Group struct {
-	prefix string
-	hMap   map[string]HandlerFunc
+	prefix     string
+	hMap       map[string]HandlerFunc
+	hMapMidd   map[string][]MiddlewareFunc
+	middleware []MiddlewareFunc
 }
 
 // AddRoute 添加路由
-func (g *Group) AddRoute(path string, callback HandlerCallback) {
+func (g *Group) AddRoute(path string, callback HandlerCallback, middleware ...MiddlewareFunc) {
 	err, funValue, msgType := checkMsgRouteCallback(callback)
 	if err != nil {
 		glog.Errorf("AddRoute Error: %v， %v", err, funValue)
@@ -41,67 +40,63 @@ func (g *Group) AddRoute(path string, callback HandlerCallback) {
 	g.hMap[path] = func(request *Request, msg2 proto.Message) {
 		funValue.Call([]reflect.Value{reflect.ValueOf(request), reflect.ValueOf(msg2)})
 	}
+	g.hMapMidd[path] = middleware
 }
 
-func (g *Group) getHandler(name string) HandlerFunc {
+// Use 全局中间件
+func (g *Group) Use(middleware ...MiddlewareFunc) *Group {
+	g.middleware = append(g.middleware, middleware...)
+	return g
+}
+
+func (g *Group) applyMiddleware(name string) HandlerFunc {
+
 	h, ok := g.hMap[name]
 	if ok == false {
 		// 通配符
 		h, ok = g.hMap["*"]
 	}
 
+	if ok {
+		for i := len(g.middleware) - 1; i >= 0; i-- {
+			h = g.middleware[i](h)
+		}
+
+		for i := len(g.hMapMidd[name]) - 1; i >= 0; i-- {
+			h = g.hMapMidd[name][i](h)
+		}
+	}
+
 	return h
 }
 
 func (g *Group) exec(name string, req *Request) {
-	// 只有在调试环境下执行，避免空耗CPU
-	if gconfig.Global.Debug {
-		glog.Debugf("Handle Msg, Route:%s.%s, ConnId:%d, Addr:%s", g.prefix, name, req.GetConnId(), req.GetConnection().RemoteAddr())
-	}
-
 	msgType, ok := RouteItemMgr.msgIdMap[req.GetMessage().GetMsgId()]
 	if !ok {
 		glog.Errorf("RouteItemMgr.msgIdMap Not Found MsgId: %d", req.GetMessage().GetMsgId())
 		return
 	}
 
-	h := g.getHandler(name)
-	if h == nil {
-		glog.Errorf("Router Msg Handler Miss, MsgId:%d", req.GetMessage().GetMsgId())
-	} else {
-		go func() {
+	msg := reflect.New(msgType.Elem()).Interface().(proto.Message)
+	err := gserialize.Protobuf.Unmarshal(req.GetMessage().GetData(), msg)
+	if err != nil {
+		glog.Errorf("unmarshal message error: %v", err)
+		return
+	}
+	gutil.NiceCallFunc(func() {
+		h := g.applyMiddleware(name)
+		if h == nil {
+			glog.Debug("Router Msg Handler Miss, MsgId:", req.GetMessage().GetMsgId())
+		} else {
 			defer func() {
 				if err := recover(); err != nil {
-					glog.Errorf("Router Msg Handler Has Error, Route:%s.%s, ConnId:%d, Error:%v", g.prefix, name, req.GetConnId(), err)
+					e := fmt.Sprintf("%v", err)
+					glog.Errorf("handler msg has err:%v", e)
 				}
 			}()
-
-			msg := reflect.New(msgType.Elem()).Interface().(proto.Message)
-			err := gserialize.Protobuf.Unmarshal(req.GetMessage().GetData(), msg)
-			if err != nil {
-				glog.Errorf("Route:%s.%s, ConnId:%d，unmarshal message error: %v", g.prefix, name, req.GetConnId(), err)
-				return
-			}
-			// 只有在调试环境下执行，避免空耗CPU
-			if gconfig.Global.Debug {
-				glog.Debugf("[ElapsedTime] Start. Route:%s.%s ｜ ConnId:%d | Param: [%+v]", g.prefix, name, req.GetConnId(), msg)
-			}
-			bt := time.Now().UnixNano()
 			h(req, msg)
-			et := time.Now().UnixNano()
-			diff := (et - bt) / int64(time.Millisecond)
-
-			if diff >= MaxResTime {
-				// 超过10的日志记录处理
-				glog.Warnf("[ElapsedTime] MaxResTime, End. Route:%s.%s | ConnId:%d | Cost: %dms", g.prefix, name, req.GetConnId(), diff)
-			} else {
-				// 只有在调试环境下执行，避免空耗CPU
-				if gconfig.Global.Debug {
-					glog.Debugf("[ElapsedTime] End. Route:%s.%s | ConnId:%d | Cost: %dms", g.prefix, name, req.GetConnId(), diff)
-				}
-			}
-		}()
-	}
+		}
+	})
 }
 
 var RouteItemMgr = &msgRouteMgr{
@@ -135,13 +130,13 @@ func (m *msgRouteMgr) AddRoute(proto string, route string, msg reflect.Type) {
 	m.Lock()
 	defer m.Unlock()
 
-	msgId := gcrc32.EncryptString(proto)
+	msgId := gcrc32.Encrypt(proto)
 	router := &RouteItem{
 		MsgId: msgId,
 		Proto: proto,
 		Route: route,
 	}
-	if !empty.IsEmpty(proto) {
+	if !gutil.IsEmpty(proto) {
 		m.protoMap[proto] = msgId
 		m.msgIdMap[msgId] = msg
 	}
@@ -165,8 +160,9 @@ type Router struct {
 
 func (r *Router) Group(prefix string) *Group {
 	g := &Group{
-		prefix: prefix,
-		hMap:   make(map[string]HandlerFunc),
+		prefix:   prefix,
+		hMap:     make(map[string]HandlerFunc),
+		hMapMidd: make(map[string][]MiddlewareFunc),
 	}
 
 	r.groups = append(r.groups, g)
@@ -176,7 +172,7 @@ func (r *Router) Group(prefix string) *Group {
 func (r *Router) Run(req *Request) {
 	msgId := req.GetMessage().GetMsgId()
 	route := RouteItemMgr.GetRoute(msgId)
-	if empty.IsEmpty(route) {
+	if gutil.IsEmpty(route) {
 		return
 	}
 
